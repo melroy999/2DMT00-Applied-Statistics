@@ -70,30 +70,8 @@ RUN;
 * What if we apply a box-cox transformation?
 ;
 
-DATA EXPANDEDBC;
-	SET EXPANDED;
-	OUTCOMEMINUS2= (-1/2)*((OUTCOME-1)**-2);
-	OUTCOMEMINUS1= (-1)*((OUTCOME-1)**-1);
-	OUTCOMEMINUS12= (-2)*((OUTCOME-1)**-(0.5));
-	OUTCOME0= log(OUTCOME);
-	OUTCOME13= (3)*((OUTCOME-1)**(1/3));
-	OUTCOME12= (2)*((OUTCOME-1)**(1/2));
-	OUTCOME2= (0.5)*((OUTCOME-1)**(2));
-RUN;
-
-proc univariate data=EXPANDEDBC;
-	histogram OUTCOMEMINUS2 /normal;
-	histogram OUTCOMEMINUS1 /normal;
-	histogram OUTCOMEMINUS12 /normal;
-	histogram OUTCOME0 /normal;
-	histogram OUTCOME13 /normal;
-	histogram OUTCOME12 /normal;
-	histogram OUTCOME2 /normal;
-	histogram OUTCOME /normal;
-run;
-* Here, OUTCOMEMINUS1, OUTCOME0 and OUTCOME13 look closest to normal;
-
-%TUKEY(DATA=EXPANDEDBC, VAR=OUTCOME13, OUT=TUKEY);
+%BOXCOX(DATA=EXPANDED, VAR=OUTCOME, OUT=RESULT);
+%TUKEY(DATA=RESULT, VAR=OUTCOME, OUT=TUKEY);
 
 * Remove the outliers;
 DATA TUKEY_NO;
@@ -103,12 +81,11 @@ RUN;
 
 * Check for normality;
 PROC UNIVARIATE DATA=TUKEY_NO NORMAL;
-	VAR OUTCOME0;
-	HISTOGRAM OUTCOME0 /NORMAL;
+	VAR OUTCOME;
+	HISTOGRAM OUTCOME /NORMAL;
 RUN;
 
-* Not normal in any of the cases.
-  Note that most of the outliers are missing values;
+* Not normal in any of the cases;
 
 
 
@@ -134,7 +111,7 @@ PROC SORT DATA=TUKEY_NO;
 RUN;
 
 PROC UNIVARIATE DATA=TUKEY_NO NORMAL;
-	VAR OUTCOME0;
+	VAR OUTCOME;
 	BY BATCH;
 RUN;
 * All are normal according to Shapiro-Wilk for OUTCOME13.
