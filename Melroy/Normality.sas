@@ -1,4 +1,5 @@
 %include '/folders/myfolders/2DMT00-Applied-Statistics/Macros/Outliers/Tukey.sas';
+%include '/folders/myfolders/2DMT00-Applied-Statistics/Macros/Boxcox.sas';
 
 * Set library;
 LIBNAME SASDATA "/folders/myfolders/2DMT00-Applied-Statistics";
@@ -111,38 +112,38 @@ RUN;
 
 
 
-/* * What if we check per batch? */
-/* ; */
-/*  */
-/* PROC SORT DATA=TUKEY; */
-/* 	BY DESCENDING T_13; */
-/* RUN; */
-/*  */
-/* PROC PRINT DATA=TUKEY; */
-/* 	WHERE T_13; */
-/* RUN; */
-/*  */
-/* * Remove the outliers; */
-/* DATA TUKEY_NO; */
-/* 	SET TUKEY; */
-/* 	WHERE NOT T_13; */
-/* RUN; */
-/*  */
-/* PROC SORT DATA=TUKEY_NO; */
-/* 	BY BATCH; */
-/* RUN; */
-/*  */
-/* PROC UNIVARIATE DATA=TUKEY_NO NORMAL; */
-/* 	VAR OUTCOME13; */
-/* 	BY BATCH; */
-/* RUN; */
-/* * All are normal according to Shapiro-Wilk for OUTCOME13. */
-/*   The others tests are always near normal, in the range 0.025-0.05. */
-/*    */
-/*   Roughly the same holds for OUTCOME0. */
-/*    */
-/*   OUTCOMEMINUS1 does not consider B2 normal for any tests. The other batches all are for each test. */
-/* ; */
+* What if we check per batch?
+;
+
+PROC SORT DATA=TUKEY;
+	BY DESCENDING OUTLIER;
+RUN;
+
+PROC PRINT DATA=TUKEY;
+	WHERE OUTLIER;
+RUN;
+
+* Remove the outliers;
+DATA TUKEY_NO;
+	SET TUKEY;
+	WHERE NOT OUTLIER;
+RUN;
+
+PROC SORT DATA=TUKEY_NO;
+	BY BATCH;
+RUN;
+
+PROC UNIVARIATE DATA=TUKEY_NO NORMAL;
+	VAR OUTCOME0;
+	BY BATCH;
+RUN;
+* All are normal according to Shapiro-Wilk for OUTCOME13.
+  The others tests are always near normal, in the range 0.025-0.05.
+  
+  Roughly the same holds for OUTCOME0.
+  
+  OUTCOMEMINUS1 does not consider B2 normal for any tests. The other batches all are for each test.
+;
 
 
 
