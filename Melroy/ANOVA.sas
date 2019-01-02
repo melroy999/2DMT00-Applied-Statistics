@@ -1,3 +1,6 @@
+%include '/folders/myfolders/2DMT00-Applied-Statistics/Macros/Outliers/Tukey.sas';
+%include '/folders/myfolders/2DMT00-Applied-Statistics/Macros/Boxcox.sas';
+
 * Set library;
 LIBNAME SASDATA "/folders/myfolders/2DMT00-Applied-Statistics";
 
