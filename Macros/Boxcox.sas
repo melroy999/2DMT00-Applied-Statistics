@@ -30,8 +30,8 @@ TITLE;
 
 DATA &OUT;
 	SET &DATA;
-	IF &lambda = 0 THEN &VAROUT = LOG(&VAR);
-	ELSE &VAROUT = ((&VAR)**&lambda - 1) /&lambda;
+	IF &lambda = 0 THEN &VAROUT = LOG(&VAR + &delta);
+	ELSE &VAROUT = ((&VAR + &delta)**&lambda - 1) /&lambda;
 RUN;
 
 PROC UNIVARIATE DATA=&OUT NORMAL;

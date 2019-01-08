@@ -25,6 +25,7 @@ proc freq data=EXPANDED nlevels;
 run;
 
 
+%BOXCOX(DATA=EXPANDED, VAR=OUTCOME, OUT=EXPANDED, lambda=0, delta=-0.5);
 
 * Get a simple impression of the distribution of the data;
 PROC BOXPLOT DATA=EXPANDED;
