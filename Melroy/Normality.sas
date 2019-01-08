@@ -70,7 +70,7 @@ RUN;
 * What if we apply a box-cox transformation?
 ;
 
-%BOXCOX(DATA=EXPANDED, VAR=OUTCOME, OUT=RESULT);
+%BOXCOX(DATA=EXPANDED, VAR=OUTCOME, OUT=RESULT, lambda=-1);
 %TUKEY(DATA=RESULT, VAR=OUTCOME, OUT=TUKEY);
 
 * Remove the outliers;

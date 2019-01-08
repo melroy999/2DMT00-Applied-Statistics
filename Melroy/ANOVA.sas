@@ -37,6 +37,12 @@ RUN;
 * Batch B2 and B3 get rejected;
 
 
+PROC MIXED DATA=TUKEY_NO METHOD=TYPE3 CL;
+	CLASS BATCH;
+	MODEL OUTCOME = BATCH /SOLUTION CL;
+	LSMEANS BATCH / DIFF=CONTROL('B0') ADJUST=DUNNETT CL;
+RUN;
+
 
 * Using OUTCOME of BC with gamma=0, check whether the outcomes of B1-1 to B7-2 differ significantly 
   from B0 using a one-way ANOVA model with Dunnett's adjustement.
