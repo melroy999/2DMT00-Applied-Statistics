@@ -9,7 +9,7 @@
   Note that this version is not the one given in the lecture: 
   the -1 component has been moved to avoid calculation errors.
 ;
-%MACRO BOXCOX(DATA, VAR, OUT, lambda=0, VAROUT=&VAR, delta=0);
+%MACRO BOXCOX(DATA, VAR, OUT, lambda=0, VAROUT=&VAR, delta=0, normalityTest=1);
 
 PROC SQL;
 	CREATE TABLE METADATA AS
@@ -34,9 +34,11 @@ DATA &OUT;
 	ELSE &VAROUT = ((&VAR + &delta)**&lambda - 1) /&lambda;
 RUN;
 
-PROC UNIVARIATE DATA=&OUT NORMAL;
-	VAR &VAROUT;
-	HISTOGRAM &VAROUT /NORMAL;
-RUN;
+%IF &normalityTest %THEN %DO;
+	PROC UNIVARIATE DATA=&OUT NORMAL;
+		VAR &VAROUT;
+		HISTOGRAM &VAROUT /NORMAL;
+	RUN;
+%END;
 
 %MEND BOXCOX;
