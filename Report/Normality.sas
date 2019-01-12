@@ -33,11 +33,17 @@ PROC FREQ DATA=SAMPLES;
 RUN;
 
 /*  
+	In general, the Shapiro-Wilk test can be used when occasional ties occur.
+	
 	As seen in the results above, a considerable amount of ties exist in the original data.
 	This would imply that the Anderson-Darling is more powerful than Shapiro-Wilk in this context.
-	
+
+	It would seem that the Shapiro-Wilk test becomes more conservative when ties exist:
 	"Sensitive to ties in the data: when ties are a result of rounding, than normality can incorrectly be rejected"
-	Does this imply that the result of the Shapiro-Wilk test will be lower than expected?
+	
+	We have that the results are rounded with a grouping interval of 0.1 au, which implies that ties might be a result of rounding.
+	
+	Thus, if normality is accepted by Shapiro-Wilk with ties, we can still use it to assert normality.
  */
 
 /*  ===========================================================================================
