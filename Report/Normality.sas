@@ -21,15 +21,38 @@
  * 	Thus, we should check whether the data contains ties.
  *  ===========================================================================================  */
 
+* Find the number of entries;
+PROC MEANS DATA=SAMPLES N;
+	VAR OUTCOME;
+RUN;
+
+* Find the number of entries per batch;
+PROC MEANS DATA=SAMPLES N;
+	VAR OUTCOME;
+	BY BATCH;
+RUN;
+
+* Find the number of entries per brid;
+PROC MEANS DATA=SAMPLES N;
+	VAR OUTCOME;
+	BY BRID;
+RUN;
+
 * Generate a frequency table for outcome;
-PROC FREQ DATA=SAMPLES;
+PROC FREQ DATA=SAMPLES NLEVELS;
 	TABLES OUTCOME;
 RUN;
 
 * Generate a frequency table for outcome per batch;
-PROC FREQ DATA=SAMPLES;
+PROC FREQ DATA=SAMPLES NLEVELS;
 	TABLES OUTCOME;
 	BY BATCH;
+RUN;
+
+* Generate a frequency table for outcome per brid;
+PROC FREQ DATA=SAMPLES NLEVELS;
+	TABLES OUTCOME;
+	BY BRID;
 RUN;
 
 /*  
@@ -81,8 +104,13 @@ PROC MIXED DATA=SAMPLES_N_MO METHOD=TYPE3 CL;
 	LSMEANS BATCH / DIFF=CONTROL('B0') ADJUST=DUNNETT CL;
 RUN;
 
+* Find the number of entries;
+PROC MEANS DATA=SAMPLES_PRED N;
+	VAR RESID;
+RUN;
+
 * Generate a frequency table for the residials;
-PROC FREQ DATA=SAMPLES_PRED;
+PROC FREQ DATA=SAMPLES_PRED NLEVELS;
 	TABLES RESID;
 RUN;
 
@@ -161,6 +189,11 @@ PROC MIXED DATA=SAMPLES_N_MO METHOD=TYPE3 CL;
 	LSMEANS BRID / DIFF=CONTROL('B0') ADJUST=DUNNETT CL;
 RUN;
 
+* Find the number of entries;
+PROC MEANS DATA=SAMPLES_PRED N;
+	VAR RESID;
+RUN;
+
 * Generate a frequency table for the residials;
 PROC FREQ DATA=SAMPLES_PRED;
 	TABLES RESID;
@@ -196,8 +229,7 @@ RUN;
 ODS GRAPHICS ON;
 
 /*
-	It would appear that the homogeneity of the risidual variance assumption is NOT violated
-	for the Brown and Forsythe's test and Bartlett's test.
+	It would appear that the homogeneity of the risidual variance assumption is NOT violated Bartlett's test.
 	
 	It is violated for Levene's test.
 */
